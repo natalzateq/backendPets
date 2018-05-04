@@ -60,7 +60,7 @@ userModel.getUserId= (id,callback) =>
              if(err)
              {
                  //throw err;
-                 msg:'No se encontrol el id';
+                 msg:'No se encontro el id';
                  
              }
              else
@@ -97,17 +97,19 @@ userModel.addUser= (dataUser,callback) =>
 {
      if(connection)
      {
-         connection.query('INSERT INTO users SET ? ', dataUser, (err, rows) => 
+         connection.query('INSERT INTO user SET ? ', dataUser, (err, rows) => 
          {
-             if(err)
-             {
+            if(err)
+            {
                  //throw err;
-                 msg: 'No se encontrol el id';
+                 error: err
                  
-             }
-             else
+                 //msg: 'No se encontro el id';
+                 
+            }
+            else
              callback(null, {
-                'InsertId': result.insertId
+                'InsertId': 'se inserto'
             })
            
 
