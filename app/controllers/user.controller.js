@@ -1,6 +1,8 @@
 const express = require('express');
 const User = require('../models/user.model');
 const router = express.Router();
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt-nodejs');
 
 //get list of users
 router.get('/users', async (req, res) => 
@@ -144,6 +146,55 @@ router.delete('/users/:id', async (req, res) =>
     else
       res.status(404).json({error: 'no existe el id'});
   
+});
+
+
+const serverJWT_Secret = 'kpTxN=)7mX3W3SEJ58Ubt8-';
+
+router.post('/login', async (req, res) => 
+{
+    let email = req.body.email;
+    let password = req.body.password;
+    if (email && password) 
+    {
+        const credentials= await User.findOne({email: email});
+
+        if(credentials!=null)
+        {
+            bcrypt.compare(password, credentials.password, function(err, igual) 
+            {
+                if(igual) 
+                {
+                    console.log('si igual');
+                    res.status(200).json({credentials});
+                } 
+                else 
+                {
+                    console.log('no igual');
+                    res.status(404).json('contraseña incorrecta');
+                
+                } 
+                
+            });
+
+        }
+        else 
+        {
+            console.log('no igual');
+            res.status(404).json({'error':'el email no existe'});
+               
+        } 
+        
+        
+    } 
+    else 
+    {
+        res.status(400).json(
+        {
+            error: 'Please provide email and password'
+        });
+    }
+
 });
 
 module.exports = router;

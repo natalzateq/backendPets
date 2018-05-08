@@ -39,13 +39,14 @@ router.post('/pets', async (req, res) =>
     let clasification = req.body.clasification;
     let race = req.body.race;
     let genre = req.body.genre;
+    let user_id = req.body.user_id;
 
-    if(name && age && clasification && race && genre)
+    if(name && age && clasification && race && genre && user_id)
     {
 
         const pet = new Pet(
         { 
-            name,age,clasification,race,genre
+            name,age,clasification,race,genre,user_id
         });
         
         const save = await pet.save();
@@ -72,11 +73,12 @@ router.put('/pets/:id', async (req, res) =>
     let clasification = req.body.clasification;
     let race = req.body.race;
     let genre = req.body.genre;
+    let user_id = req.body.user_id;
 
-    if(name && age && clasification && race && genre)
+    if(name && age && clasification && race && genre && user_id)
     {
 
-        await Pet.update({_id: id}, {name,age,clasification,race,genre});
+        await Pet.update({_id: id}, {name,age,clasification,race,genre,user_id});
         res.send(name);
 
     }

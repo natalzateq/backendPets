@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const User = require('../models/user.model');
+
+//user= new userSchema;
 
 const petSchema = new Schema(
 {
@@ -23,8 +26,15 @@ const petSchema = new Schema(
         type: String,
         required: true
         //default: 'female'
-    }
-})
+    },
+    user_id: 
+    { 
+        type: mongoose.Schema.Types.ObjectId,  
+        ref: 'user'
+    },
+    
+    
+}, { strict: true })
 
 
 module.exports = mongoose.model('pet', petSchema);
