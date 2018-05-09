@@ -3,6 +3,7 @@ const User = require('../models/user.model');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt-nodejs');
+const config = require('../db.js');
 
 //get list of users
 router.get('/users', async (req, res) => 
@@ -166,7 +167,13 @@ router.post('/login', async (req, res) =>
                 if(igual) 
                 {
                     console.log('si igual');
-                    res.status(200).json({credentials});
+                    var token = jwt.sign({ email: email, firstName: credentials.firstName, _id: credentials._id}, config.secret, 
+                    {
+                        expiresIn: config.tokenexp
+                    });
+
+                    //res.json({token: jwt.sign({ email: email, firstName: credentials.firstName, _id: credentials._id}, config.secret)});
+                    res.status(200).json({credentials,token});
                 } 
                 else 
                 {
@@ -196,5 +203,35 @@ router.post('/login', async (req, res) =>
     }
 
 });
+
+
+
+    exports.authenticate = function(req, res, next){
+        // check header or url parameters or post parameters for token
+        var token = req.body.token || req.query.token || req.headers['authorization'];
+        //console.log(token);
+        if (token) {
+            jwt.verify(token, config.secret, function(err, decoded) 
+            {			
+                if (err) 
+                {
+                    return res.status(201).json({ success: false, message: 'Authenticate token expired, please login again.', errcode: 'exp-token' });		
+                } 
+                else 
+                {
+                    req.decoded = decoded;	
+                    next();
+                }
+            });
+        } 
+        else 
+        {
+            return res.status(201).json({ 
+                success: false, 
+                message: 'Fatal error, Authenticate token not available.',
+                        errcode: 'no-token'
+            });
+        }
+    }
 
 module.exports = router;

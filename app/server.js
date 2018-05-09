@@ -7,20 +7,26 @@ const jwt = require('express-jwt');
 
 const app = express();
 
+
 //const routes = require('./routes/routes');
 const petController = require('./controllers/pet.controller');
 const userController = require('./controllers/user.controller');
 
+const dbConfig = require('./db');
+//const dbConfig = 'mongodb://localhost/pets-dev';
 //const dbConfig = require('./config/db');
-const dbConfig = 'mongodb://localhost/pets-dev';
+
 // connection to db
-mongoose.connect(dbConfig)
+//mongoose.connect(dbConfig)
+mongoose.connect(dbConfig.DB_URL)
   .then(db => console.log('db connected'))
   .catch(err => console.log(err));
 
 
   // settings
 app.set('port', process.env.PORT || 3000);
+
+
 
 
 // middlewares
@@ -30,6 +36,9 @@ app.use(cors());
 //app.use('/',routes);
 app.use(userController);
 app.use(petController);
+
+//var apiRoutes = express.Router();
+//app.use(userController.authenticate());
 
 //routes
 //require('./routes/routes')(app);
